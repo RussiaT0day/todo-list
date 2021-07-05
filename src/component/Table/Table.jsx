@@ -12,10 +12,10 @@ export default function Table() {
 	const [warning, setWarning] = useState('')
 	const [name, setName] = useState('')
 	const [type, setType] = useState('main')
-	const [color, setColor] = useState('#fff')
+	const [color, setColor] = useState('#ffffff')
 	const [editText, setEditText] = useState('')
 	const [editStack, setEditStack] = useState()
-	const [massage, setMassage] = useState('')
+	const [massage, setMassage] = useState('color')
 
 
 
@@ -127,7 +127,10 @@ export default function Table() {
 												<input type="text"
 													onChange={e => setEditText(e.target.value)}
 													value={editText}
-													placeholder={el.name} />
+													placeholder={el.name}
+													style={{backgroundColor: el.color}}
+													/>
+													{el.color}
 											</div>
 										</div>
 										:
@@ -135,6 +138,7 @@ export default function Table() {
 								}
 							</div>
 							<div className={style.table_view_edit}>
+								<input type="color" value={el.color} onChange={(e)=>edit(el.id,'','','',e.target.value)} data-id={el.id} />
 								{el.edit ?
 									<button
 										data-id={el.id}
@@ -151,6 +155,7 @@ export default function Table() {
 									data-id={el.id}
 									onClick={(e) => dispatch(deleteTodo(parseInt(e.target.dataset.id)))}
 								>Удалить</button>
+								
 							</div>
 						</div>
 					}
