@@ -29,7 +29,6 @@ export const addTodo  = (data) =>{
 
 
 export const deleteTodo = (data) => {
-    console.log('data', data);
     return {
         type: DELETE_TODO,
         payload: data,

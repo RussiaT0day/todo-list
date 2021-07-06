@@ -1,0 +1,59 @@
+.table{
+
+}
+.table_add{
+	border: 1px solid black;
+}
+.table_add_title{
+	text-align: center;
+}
+.table_add_from_select{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin-bottom: 20px;
+}
+
+.table_add_from_select div{
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	
+}
+.table_add_from_select_title{
+	display: flex;
+
+}
+.table_add_warning{
+
+}
+.table_add_form{
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+	align-items: center;
+}
+.table_add_form_textarea{
+	width: 60%;
+}
+.table_add_form_textarea textarea{
+	min-width:100%;
+	resize:vertical;
+}
+.table_manipulate_form{
+
+}
+.table_view{
+
+}
+.table_view_edit{
+
+}
+.table_view_title{
+	text-align: center;
+
+}
+.massage{
+
+}

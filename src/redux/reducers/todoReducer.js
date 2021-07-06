@@ -10,30 +10,26 @@ const todoReducer = (state = [], action) => {
         case DOWNLOAD_TODO:
             return action.payload;
         case EDIT_TODO:
-            // if (action.payload.position && typeof action.payload.position ==='number') {
-            //     console.log(action.payload.position);
-            //     let temp = state[action.payload.position]
-            // }
-            // console.log(action.payload);
-            // delete action.payload['position']
-
             let record = state.filter(el => el.id === action.payload.id)[0];
-            console.log(record);
             for (const key in action.payload) {
-                if (action.payload[key] !== undefined && action.payload[key] !== '' ){ 
+                if (action.payload[key] !== undefined && action.payload[key] !== '') {
                     record[key] = action.payload[key];
                 }
-                
             }
-            console.log('record',record);
-            return state.map(el =>{ 
+            if (action.payload.position && typeof action.payload.position === 'number') {
+                let temp = state[action.payload.position];
+                state[action.payload.position] = record
+                state.push(temp);
+            }
+            delete action.payload['position']
+            return state.map(el => {
                 if (el.id === record.id) {
                     el = record
                     return el
                 }
                 el.edit = false
-            return el
-        })
+                return el
+            })
         case DELETE_TODO:
             return state.filter(el => el.id !== action.payload);
         default:

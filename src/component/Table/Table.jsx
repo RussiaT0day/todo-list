@@ -4,6 +4,7 @@ import { addTodo, downloadTodo, deleteTodo, editToto } from '../../redux/actions
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect, useState } from 'react'
 import { Children } from 'react'
+import Title from './Title/Title'
 
 export default function Table() {
 	const { todo } = useSelector(prev => prev)
@@ -15,7 +16,7 @@ export default function Table() {
 	const [color, setColor] = useState('#ffffff')
 	const [editText, setEditText] = useState('')
 	const [editStack, setEditStack] = useState()
-	const [massage, setMassage] = useState('color')
+	const [massage, setMassage] = useState('')
 
 
 
@@ -28,8 +29,6 @@ export default function Table() {
 		} else {
 			dispatch(addTodo({ id: new Date().getTime(), name, type, color, edit: false }))
 			setWarning('');
-
-
 			return
 		}
 	}
@@ -54,14 +53,14 @@ export default function Table() {
 		return
 	}
 
-	function edit(id, edit, name, type, color) {
-		// console.log(id, edit, name, type, color, position);
-		// if (position < 0 || position > todo.length || typeof position !== 'number') {
-		// 	setMassage('Введите допустимое значение позиции ')
-		// 	setTimeout(() => { setMassage('') }, 1500)
-		// 	return
-		// }
-		dispatch(editToto({ id, edit, name, type, color }))
+	function edit(id, edit, name, type, color, position) {
+		if (position < 0 || position > todo.length && typeof position === 'number' && !isNaN(position)) {
+			setMassage('Введите допустимое значение позиции ')
+			setTimeout(() => setMassage(''), 2500)
+			setEditStack()
+			return
+		}
+		dispatch(editToto({ id, edit, name, type, color, position }))
 		setEditText('')
 		return
 	}
@@ -70,27 +69,35 @@ export default function Table() {
 		<div className={style.table}>
 			<div className={style.table_add}>
 				<div className={style.table_add_title}>
-					<h2>Добавить запись </h2>
+					{/* <Title name={`Добавить запись`}></Title> */}
+					<p>Добавить запись</p>
 				</div>
 				{warning && <div className={style.table_add_warning}>
 					<p>{warning}</p>
 				</div>
 				}
 				<div className={style.table_add_form}>
-					<div><h3>название</h3></div>
-					<div>
+					<div><Title name={`название`}></Title></div>
+					<div className={style.table_add_form_textarea}>
 						<textarea onChange={e => setName(e.target.value)} value={name} type="text" />
 					</div>
-					<div><h3>позиция</h3></div>
-					<div>
-						<select onChange={e => setType(e.target.value)} value={type} name="" id="">
-							<option value="main">главная</option>
-							<option value="side">второстепенная</option>
-						</select>
+					<div className={style.table_add_from_select}>
+						<div>
+
+							<Title name={`позиция`} />
+							<select onChange={e => setType(e.target.value)} value={type} name="" id="">
+								<option value="main">главная</option>
+								<option value="side">второстепенная</option>
+							</select>
+						</div>
+						<div>
+							<Title name={`цвет заметки `} />
+
+							<input type="color" onChange={e => setColor(e.target.value)} value={color} />
+						</div>
 					</div>
-					<div><h3>цвет заметки </h3></div>
+
 					<div>
-						<input type="color" onChange={e => setColor(e.target.value)} value={color} />
 					</div>
 					<div>
 						<button onClick={() => {
@@ -98,18 +105,73 @@ export default function Table() {
 						}}>Добавить</button>
 					</div>
 				</div>
-
 				<div className={style.table_manipulate_form}>
 					<button onClick={() => save(todo)}>Сохранить</button>
 					<button onClick={() => download()}>Загрузить</button>
 				</div>
 			</div>
-			<div className={style.table_view}>
-				<div className={style.table_view_title}>
-					<h3>Главные задачи</h3>
-				</div>
+			<div className={style.table_view_title}>
+				<Title name={`Главные задачи`}></Title>
 				{todo && todo.map((el, i) => {
 					if (el.type === 'main') {
+						return <div style={{ backgroundColor: `${el.color}` }}>
+							<div className={style.table_view_task}>	
+								{
+									el.edit ?
+										<div>
+											<div className={style.massage}>
+												{massage}
+											</div>
+											<div>
+												<input type='number'
+													onChange={e => setEditStack(e.target.value)}
+													value={editStack}
+													placeholder={i}
+												/>
+												<input type="text"
+													onChange={e => setEditText(e.target.value)}
+													value={editText}
+													placeholder={el.name}
+													style={{ backgroundColor: el.color }}
+												/>
+												{el.color}
+											</div>
+										</div>
+										:
+										<div>№{i + 1} {el.name}</div>
+								}
+							</div>
+
+
+							<div className={style.table_view_edit}>
+								<input type="color" value={el.color} onChange={(e) => edit(el.id, '', '', '', e.target.value)} data-id={el.id} />
+								{el.edit ?
+									<button
+										data-id={el.id}
+										onClick={(e) => edit(parseInt(e.target.dataset.id), false, editText, '', '', parseInt(editStack))}
+									>Сохранить</button>
+									:
+									<button
+										data-id={el.id}
+										onClick={(e) => edit(parseInt(e.target.dataset.id), true)}
+									>Редактировать</button>
+								}
+
+								<button
+									data-id={el.id}
+									onClick={(e) => dispatch(deleteTodo(parseInt(e.target.dataset.id)))}
+								>Удалить</button>
+
+							</div>
+						</div>
+					}
+				})}
+
+				<div className={style.table_view_title}>
+					<Title name={`Второстепенная`}></Title>
+				</div>
+				{todo && todo.map((el, i) => {
+					if (el.type === 'side') {
 						return <div style={{ backgroundColor: `${el.color}` }}>
 							<div className={style.table_view_task}>
 								{
@@ -128,17 +190,19 @@ export default function Table() {
 													onChange={e => setEditText(e.target.value)}
 													value={editText}
 													placeholder={el.name}
-													style={{backgroundColor: el.color}}
-													/>
-													{el.color}
+													style={{ backgroundColor: el.color }}
+												/>
+												{el.color}
 											</div>
 										</div>
 										:
 										<div>№{i + 1} {el.name}</div>
 								}
 							</div>
+
+
 							<div className={style.table_view_edit}>
-								<input type="color" value={el.color} onChange={(e)=>edit(el.id,'','','',e.target.value)} data-id={el.id} />
+								<input type="color" value={el.color} onChange={(e) => edit(el.id, '', '', '', e.target.value)} data-id={el.id} />
 								{el.edit ?
 									<button
 										data-id={el.id}
@@ -155,28 +219,14 @@ export default function Table() {
 									data-id={el.id}
 									onClick={(e) => dispatch(deleteTodo(parseInt(e.target.dataset.id)))}
 								>Удалить</button>
-								
+
 							</div>
 						</div>
 					}
-				})
-				}
+				})}
 
 
 
-				<div className={style.table_view_title}>
-					<h3>Второстепенная</h3>
-				</div>
-				{todo.map(el => {
-					if (el.type === 'side') {
-						return <div style={{ backgroundColor: `${el.color}` }}>
-							<div className={style.table_view_task}>
-								{el.name}
-							</div>
-						</div>
-					}
-				})
-				}
 			</div>
 		</div >
 	)
