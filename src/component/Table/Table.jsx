@@ -29,6 +29,7 @@ export default function Table() {
 		} else {
 			dispatch(addTodo({ id: new Date().getTime(), name, type, color, edit: false }))
 			setWarning('');
+			setName('')
 			return
 		}
 	}
@@ -69,30 +70,28 @@ export default function Table() {
 		<div className={style.table}>
 			<div className={style.table_add}>
 				<div className={style.table_add_title}>
-					{/* <Title name={`Добавить запись`}></Title> */}
-					<p>Добавить запись</p>
+					<h3>Добавить запись</h3>
 				</div>
 				{warning && <div className={style.table_add_warning}>
 					<p>{warning}</p>
 				</div>
 				}
 				<div className={style.table_add_form}>
-					<div><Title name={`название`}></Title></div>
+					<div><p>название</p></div>
 					<div className={style.table_add_form_textarea}>
 						<textarea onChange={e => setName(e.target.value)} value={name} type="text" />
 					</div>
 					<div className={style.table_add_from_select}>
 						<div>
 
-							<Title name={`позиция`} />
+							<p>позиция</p>
 							<select onChange={e => setType(e.target.value)} value={type} name="" id="">
 								<option value="main">главная</option>
 								<option value="side">второстепенная</option>
 							</select>
 						</div>
 						<div>
-							<Title name={`цвет заметки `} />
-
+							<p>цвет заметки </p>
 							<input type="color" onChange={e => setColor(e.target.value)} value={color} />
 						</div>
 					</div>
@@ -115,7 +114,7 @@ export default function Table() {
 				{todo && todo.map((el, i) => {
 					if (el.type === 'main') {
 						return <div style={{ backgroundColor: `${el.color}` }}>
-							<div className={style.table_view_task}>	
+							<div className={style.table_view_task}>
 								{
 									el.edit ?
 										<div>
@@ -123,18 +122,13 @@ export default function Table() {
 												{massage}
 											</div>
 											<div>
-												<input type='number'
-													onChange={e => setEditStack(e.target.value)}
-													value={editStack}
-													placeholder={i}
-												/>
+											<div>№{i + 1}</div>
 												<input type="text"
 													onChange={e => setEditText(e.target.value)}
 													value={editText}
 													placeholder={el.name}
 													style={{ backgroundColor: el.color }}
 												/>
-												{el.color}
 											</div>
 										</div>
 										:
@@ -181,18 +175,13 @@ export default function Table() {
 												{massage}
 											</div>
 											<div>
-												<input type='number'
-													onChange={e => setEditStack(e.target.value)}
-													value={editStack}
-													placeholder={i}
-												/>
+											<div>№{i + 1}</div>
 												<input type="text"
 													onChange={e => setEditText(e.target.value)}
 													value={editText}
 													placeholder={el.name}
 													style={{ backgroundColor: el.color }}
 												/>
-												{el.color}
 											</div>
 										</div>
 										:

@@ -19,7 +19,14 @@
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-	
+}
+.table_add_from_select div:first-child{
+	margin-right: 25px;
+}
+.table_add_from_select div input[type=color]{
+	width: 50px;
+	height: 50px;
+	border-radius: 50%;
 }
 .table_add_from_select_title{
 	display: flex;
